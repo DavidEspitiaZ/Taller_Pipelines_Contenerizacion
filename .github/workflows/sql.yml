@@ -23,7 +23,7 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           source: "./sql/*.sql"
-          target: "/home/${{ secrets.EC2_USER }}/sql"
+          target: "/home/${{ secrets.EC2_USER }}/estudianes.sql"
 
       - name: Execute SQL files on PostgreSQL container
         uses: appleboy/ssh-action@v0.1.10
@@ -32,8 +32,8 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            docker cp /home/${{ secrets.EC2_USER }}/sql postgresql-dev
+            docker cp /home/${{ secrets.EC2_USER }}/sql postgresql-dev:/app
             docker exec -i postgresql-dev psql \
             -U "root" \
             -d "Prueba" \
-            -f /estudiantes.sql
+            -f /app/estudiantes.sql
