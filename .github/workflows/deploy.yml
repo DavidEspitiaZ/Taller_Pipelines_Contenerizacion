@@ -1,0 +1,25 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches: [main]
+    deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: SSH intro EC2 and deploy container
+        uses: appleboy/ssh-action@v0.1.10
+        with: 
+          host: ${{ secrets.EC2_HOST}}
+          username: ${{ secrets.EC2_USER}}
+          key: ${{ secrets.EC2_SSH_KEY}}
+          script: |
+            docker run -d \
+            --name postgresql-dev \
+            -e POSTGRES_USER=${{ secrets.POSTGRES_USER}} \
+            -e POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD}} \
+            -e POSTGRES_DB=${{ secrets.POSTGRES_DB} \
+            -P 5432:5432 \
+            -d postgres:15
