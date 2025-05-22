@@ -1,9 +1,6 @@
 name: Load SQL Data into PostgreSQL
 
-on:
-  push:
-    branches: [main]
-  workflow_dispatch:
+on: workflow_dispatch
 
 jobs:
   load-data:
@@ -32,7 +29,7 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            docker cp /home/${{ secrets.EC2_USER }}/sql postgresql-dev:/app
+            docker cp /home/${{ secrets.EC2_USER }}/estudianes.sql postgresql-dev:/app
             docker exec -i postgresql-dev psql \
             -U "root" \
             -d "Prueba" \
