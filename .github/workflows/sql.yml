@@ -1,0 +1,39 @@
+name: Load SQL Data into PostgreSQL
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  load-data:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Copy SQL files to EC2
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "./sql/*.sql"
+          target: "/home/${{ secrets.EC2_USER }}/sql"
+
+      - name: Execute SQL files on PostgreSQL container
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            docker cp /home/${{ secrets.EC2_USER }}/sql postgresql-dev:/app
+            docker exec -i postgresql-dev psql \
+            -U "root" \
+            -d "Prueba" \
+            -f /app/estudiantes.sql
