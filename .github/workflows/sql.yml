@@ -29,8 +29,8 @@ jobs:
           username: ${{ secrets.EC2_USER}}
           key: ${{secrets.EC2_SSH_KEY}}
           script: |
-            docker cp /home/${{secrets.EC2_USER}}/estudianes.sql postgresql-dev:/app
-            docker exec -i postgresql-dev psql \
+            docker cp /home/${{secrets.EC2_USER}}/estudianes.sql postgresql-de:/app
+            docker exec -i postgresql-de psql \
             -U "root" \
             -d "Prueba" \
             -f /app/estudiantes.sql
