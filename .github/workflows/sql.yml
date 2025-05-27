@@ -33,4 +33,4 @@ jobs:
             docker exec -i postgresql-de psql \
             -U "root" \
             -d "Prueba" \
-            -f /app/estudiantes.sql
+            -f /app/estudianes.sql
